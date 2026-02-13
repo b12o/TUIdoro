@@ -7,6 +7,7 @@ import {
 } from "@opentui/core";
 
 import pomodoroSettings from "../settings.json";
+import { Timer } from "./timer.js";
 
 type PomodoroSettings = {
   workDuration: number;
@@ -17,6 +18,10 @@ type PomodoroSettings = {
 
 const settingsData: PomodoroSettings = pomodoroSettings;
 
+const timer = new Timer(10, 5);
+timer.start();
+
+/*
 const renderer = await createCliRenderer({ exitOnCtrlC: true });
 
 renderer.root.add(
@@ -41,3 +46,4 @@ renderer.root.add(
     ),
   ),
 );
+*/
