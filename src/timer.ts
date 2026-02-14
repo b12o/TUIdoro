@@ -1,4 +1,5 @@
 import { logger } from "./logger.js";
+import { countdownString } from "./utils.js";
 
 export class Timer {
   // state
@@ -59,12 +60,10 @@ export class Timer {
   }
 
   private countdown() {
-    if (this.currentTimeLeft <= 1) {
+    console.log(countdownString(this.currentTimeLeft--));
+    if (this.currentTimeLeft < 0) {
       this.handleNextPeriod();
-      return;
     }
-    this.currentTimeLeft -= 1;
-    console.log(this.currentTimeLeft);
   }
 
   handleNextPeriod() {

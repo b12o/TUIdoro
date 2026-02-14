@@ -18,7 +18,7 @@ type PomodoroSettings = {
 
 const settingsData: PomodoroSettings = pomodoroSettings;
 
-const timer = new Timer(10, 5);
+const timer = new Timer(120, 80);
 timer.start();
 
 /*
