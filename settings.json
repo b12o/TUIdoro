@@ -1,6 +1,6 @@
 {
-  "workDuration": 1500,
-  "shortBreakDuration": 300,
-  "longBreakDuration": 900,
+  "workDuration": 20,
+  "shortBreakDuration": 6,
+  "longBreakDuration": 9,
   "longBreakAfter": 4
 }

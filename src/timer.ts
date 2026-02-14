@@ -1,3 +1,4 @@
+import type { PomodoroSettings } from "./types.js";
 import { logger } from "./logger.js";
 import { countdownString } from "./utils.js";
 
@@ -7,32 +8,29 @@ export class Timer {
   isRunning = false;
   isWork = false;
   isBreak = false;
-  lapsCompleted: number = 0;
+  private intervalId: NodeJS.Timeout | undefined;
 
   // pomodoro settings
-  workDurationMinutes = 25;
-  shortBreakDurationMinutes = 5;
-  longBreakDurationMinutes = 15;
-  longBreakAfter = 6;
+  workDurationSeconds = 1500; // 25 minutes
+  shortBreakDurationSeconds = 300;
+  longBreakDurationSeconds = 900;
+  longBreakAfter = 4;
+  lapsCompleted = 0;
   pauseAfterLap = true;
-
-  // counter settings
-  workDurationSeconds = this.workDurationMinutes * 60;
-  shortBreakDurationSeconds = this.shortBreakDurationMinutes * 60;
-  longBreakDurationSeconds = this.longBreakDurationMinutes * 60;
   currentTimeLeft = this.workDurationSeconds;
-
-  // counters
-  private intervalId: NodeJS.Timeout | undefined;
 
   // UI
   workCaption = "let's get to work";
   shortBreakCaption = "time for a short break";
   longBreakCaption = "time for a long break";
+  timeLeftFormatted = "";
 
-  constructor(workDuration?: number, breakDuration?: number) {
-    if (workDuration) this.workDurationSeconds = workDuration;
-    if (breakDuration) this.shortBreakDurationSeconds = breakDuration;
+  constructor(settingsData: PomodoroSettings) {
+    this.workDurationSeconds = settingsData.workDuration;
+    this.shortBreakDurationSeconds = settingsData.shortBreakDuration;
+    this.longBreakDurationSeconds = settingsData.longBreakDuration;
+    this.longBreakAfter = settingsData.longBreakAfter;
+    this.timeLeftFormatted = countdownString(this.workDurationSeconds);
 
     // TODO: make sure that if a config is passed to the constructor, that the
     // durations are between 1-100
@@ -60,7 +58,7 @@ export class Timer {
   }
 
   private countdown() {
-    console.log(countdownString(this.currentTimeLeft--));
+    this.timeLeftFormatted = countdownString(this.currentTimeLeft--);
     if (this.currentTimeLeft < 0) {
       this.handleNextPeriod();
     }

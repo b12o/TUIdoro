@@ -1,28 +1,27 @@
 import {
-  ASCIIFont,
   Box,
   createCliRenderer,
-  Text,
+  TextRenderable,
+  StyledText,
   TextAttributes,
 } from "@opentui/core";
 
+import type { PomodoroSettings } from "./types.js";
 import pomodoroSettings from "../settings.json";
 import { Timer } from "./timer.js";
 
-type PomodoroSettings = {
-  workDuration: number;
-  shortBreakDuration: number;
-  longBreakDuration: number;
-  longBreakAfter: number;
-};
-
 const settingsData: PomodoroSettings = pomodoroSettings;
-
-const timer = new Timer(120, 80);
+const timer = new Timer(settingsData);
 timer.start();
 
-/*
 const renderer = await createCliRenderer({ exitOnCtrlC: true });
+
+const timeText = new TextRenderable(renderer, {
+  id: "timeleft",
+  content: timer.timeLeftFormatted,
+  justifyContent: "center",
+  alignItems: "center",
+});
 
 renderer.root.add(
   Box(
@@ -35,15 +34,21 @@ renderer.root.add(
       {
         justifyContent: "center",
         alignItems: "flex-start",
-        borderStyle: "double",
       },
-      Text({
-        id: "titleText",
-        content: "Time to work.",
-        attributes: TextAttributes.DIM,
-      }),
-      ASCIIFont({ font: "block", text: "5:00" }),
+      timeText,
     ),
   ),
 );
-*/
+
+setInterval(() => {
+  timeText.content = timer.timeLeftFormatted;
+}, 1000);
+
+renderer.start();
+
+renderer.on("key", (event) => {
+  if (event.key === "q") {
+    renderer.destroy();
+    process.exit();
+  }
+});
