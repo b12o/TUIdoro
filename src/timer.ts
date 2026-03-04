@@ -20,9 +20,9 @@ export class Timer {
   currentTimeLeft = this.workDurationSeconds;
 
   // UI
-  workCaption = "let's get to work";
-  shortBreakCaption = "time for a short break";
-  longBreakCaption = "time for a long break";
+  workCaption = "let's get to work.";
+  shortBreakCaption = "time for a short break.";
+  longBreakCaption = "time for a long break.";
   timeLeftFormatted = "";
 
   constructor(settingsData: PomodoroSettings) {
@@ -54,6 +54,7 @@ export class Timer {
   resume(): void {
     logger.info("Resuming timer ...");
     this.isRunning = true;
+    clearInterval(this.intervalId);
     this.intervalId = setInterval(() => this.countdown(), 1000);
   }
 
@@ -77,6 +78,6 @@ export class Timer {
       this.currentTimeLeft = this.workDurationSeconds;
     }
     // TODO: based on settings automatically resume or wait for user input
-    this.resume();
+    // this.resume();
   }
 }
