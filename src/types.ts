@@ -3,4 +3,13 @@ export type PomodoroSettings = {
   shortBreakDuration: number;
   longBreakDuration: number;
   longBreakAfter: number;
+  workColor: string;
+  shortBreakColor: string;
+  longBreakColor: string;
+};
+
+export type InitialData = {
+  timeLeft: string;
+  pomodori: number;
+  caption: string;
 };

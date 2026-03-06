@@ -20,12 +20,14 @@ export class Timer {
   currentTimeLeft = this.workDurationSeconds;
 
   // UI
-  workCaption = "let's get to work.";
-  shortBreakCaption = "time for a short break.";
-  longBreakCaption = "time for a long break.";
+  caption = "";
+  workCaption = "Lock in.";
+  shortBreakCaption = "Time for a short break.";
+  longBreakCaption = "Time for a long break.";
   timeLeftFormatted = "";
 
   constructor(settingsData: PomodoroSettings) {
+    this.caption = this.workCaption;
     this.workDurationSeconds = settingsData.workDuration;
     this.shortBreakDurationSeconds = settingsData.shortBreakDuration;
     this.longBreakDurationSeconds = settingsData.longBreakDuration;
@@ -59,7 +61,7 @@ export class Timer {
   }
 
   private countdown() {
-    this.timeLeftFormatted = countdownString(this.currentTimeLeft--);
+    this.timeLeftFormatted = countdownString(--this.currentTimeLeft);
     if (this.currentTimeLeft < 0) {
       this.handleNextPeriod();
     }
@@ -72,10 +74,14 @@ export class Timer {
       this.isWork = false;
       this.isBreak = true;
       this.currentTimeLeft = this.shortBreakDurationSeconds;
+      this.timeLeftFormatted = countdownString(this.currentTimeLeft);
+      this.caption = this.shortBreakCaption;
     } else if (this.isBreak) {
       this.isBreak = false;
       this.isWork = true;
       this.currentTimeLeft = this.workDurationSeconds;
+      this.timeLeftFormatted = countdownString(this.currentTimeLeft);
+      this.caption = this.workCaption;
     }
     // TODO: based on settings automatically resume or wait for user input
     // this.resume();

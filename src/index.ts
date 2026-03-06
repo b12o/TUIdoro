@@ -1,76 +1,27 @@
-import {
-  Box,
-  createCliRenderer,
-  TextRenderable,
-  ASCIIFontRenderable,
-} from "@opentui/core";
-
+import { createCliRenderer } from "@opentui/core";
 import type { PomodoroSettings } from "./types.js";
-import pomodoroSettings from "../settings.json";
 import { Timer } from "./timer.js";
+import { createLayout } from "./layout.js";
+import pomodoroSettings from "../settings.json";
 
 const settingsData: PomodoroSettings = pomodoroSettings;
 const timer = new Timer(settingsData);
 
 const renderer = await createCliRenderer({ exitOnCtrlC: true });
 
-const timeText = new ASCIIFontRenderable(renderer, {
-  id: "timeleft",
-  font: "block",
-  text: timer.timeLeftFormatted,
-  justifyContent: "center",
-  alignItems: "center",
+const { root, timeText, pomodoriText, captionText } = createLayout(renderer, {
+  timeLeft: timer.timeLeftFormatted,
+  pomodori: timer.lapsCompleted,
+  caption: timer.caption,
 });
 
-const laps = new TextRenderable(renderer, {
-  id: "laps",
-  content: `laps: ${timer.lapsCompleted}`,
-  justifyContent: "center",
-  alignItems: "center",
-});
-
-const captionText = new TextRenderable(renderer, {
-  id: "caption",
-  content: timer.workCaption,
-  justifyContent: "center",
-});
-
-renderer.root.add(
-  Box(
-    {
-      alignItems: "center",
-      justifyContent: "center",
-      flexGrow: 1,
-      border: true,
-    },
-    Box(
-      {
-        justifyContent: "center",
-      },
-      captionText,
-    ),
-    Box(
-      {
-        justifyContent: "center",
-        alignItems: "flex-start",
-        border: true,
-      },
-      timeText,
-    ),
-    Box(
-      {
-        justifyContent: "center",
-      },
-      laps,
-    ),
-  ),
-);
+renderer.root.add(root);
 
 setInterval(() => {
   timeText.text = timer.timeLeftFormatted;
-  laps.content = `laps: ${timer.lapsCompleted}`;
-}, 100);
-
+  pomodoriText.content = `Pomodori: ${timer.lapsCompleted}`;
+  captionText.content = timer.caption;
+}, 200);
 renderer.keyInput.on("keypress", (key) => {
   if (key.name === "q") {
     renderer.destroy();
@@ -78,10 +29,10 @@ renderer.keyInput.on("keypress", (key) => {
   }
 
   if (key.name === "s") {
-    timer.start();
+    if (!timer.isStarted) timer.start();
   }
 
   if (key.name === "r") {
-    timer.resume();
+    if (timer.isStarted) timer.resume();
   }
 });
