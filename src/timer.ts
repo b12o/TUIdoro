@@ -4,7 +4,7 @@ import { countdownString } from "./utils.js";
 
 export class Timer {
   // state
-  isStarted = false;
+  isStarted = false; // is 'false' at the beginning and after every pomodoro
   isRunning = false;
   isWork = false;
   isBreak = false;
@@ -29,32 +29,43 @@ export class Timer {
   constructor(settingsData: PomodoroSettings) {
     this.caption = this.workCaption;
     this.workDurationSeconds = settingsData.workDuration;
+    this.currentTimeLeft = this.workDurationSeconds;
     this.shortBreakDurationSeconds = settingsData.shortBreakDuration;
     this.longBreakDurationSeconds = settingsData.longBreakDuration;
     this.longBreakAfter = settingsData.longBreakAfter;
     this.timeLeftFormatted = countdownString(this.workDurationSeconds);
+    // should always start in work mode
+    this.isWork = true;
+
+    logger.debug("\n\n=================================\n");
+    logger.debug("Initialized timer with following settings:");
+    logger.debug(`workduration (seconds): ${this.workDurationSeconds}`);
+    logger.debug(
+      `short break duration (seconds): ${this.shortBreakDurationSeconds}`,
+    );
+    logger.debug(
+      `long break duration (seconds): ${this.longBreakDurationSeconds}`,
+    );
+    logger.debug(`long break after (pomodori): ${this.longBreakAfter}`);
 
     // TODO: make sure that if a config is passed to the constructor, that the
     // durations are between 1-100
   }
 
-  start() {
-    logger.info("Initializing timer ...");
+  start(): void {
     this.isStarted = true;
-    this.isRunning = true;
-    this.isWork = true;
-    this.currentTimeLeft = this.workDurationSeconds;
-    this.intervalId = setInterval(() => this.countdown(), 1000);
+    const period = this.isWork ? "new pomodoro" : "break";
+    this.resume(`Starting ${period} ...`);
   }
 
   stop(): void {
-    logger.info("Stopping timer ...");
+    logger.info("Stopping ...");
     this.isRunning = false;
     clearInterval(this.intervalId);
   }
 
-  resume(): void {
-    logger.info("Resuming timer ...");
+  resume(msg: string = "Resuming ...."): void {
+    logger.info(msg);
     this.isRunning = true;
     clearInterval(this.intervalId);
     this.intervalId = setInterval(() => this.countdown(), 1000);
@@ -69,6 +80,7 @@ export class Timer {
 
   handleNextPeriod() {
     this.stop();
+    this.isStarted = false;
     if (this.isWork) {
       this.lapsCompleted++;
       this.isWork = false;
