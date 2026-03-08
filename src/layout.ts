@@ -34,7 +34,8 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     content: "______________________________________",
   });
 
-  const keyStart = Text({
+  const keyLifecycle = new TextRenderable(renderer, {
+    id: "lifecycle",
     content: "s start",
   });
 
@@ -91,11 +92,11 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
         width: 40,
         marginTop: 1,
       },
-      keyStart,
+      keyLifecycle,
       keyOptions,
       keyZen,
       keyQuit,
     ),
   );
-  return { root, timeText, pomodoriText, captionText };
+  return { root, timeText, pomodoriText, captionText, keyLifecycle };
 }
