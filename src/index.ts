@@ -3,6 +3,7 @@ import { createCliRenderer } from "@opentui/core";
 import type { PomodoroSettings } from "./types.js";
 import { Timer } from "./timer.js";
 import { createLayout } from "./layout.js";
+import { playSound } from "./utils.js";
 import pomodoroSettings from "../settings.json";
 
 const settingsData: PomodoroSettings = pomodoroSettings;
@@ -24,13 +25,13 @@ setInterval(() => {
   pomodoriText.content = `Pomodori: ${timer.lapsCompleted}`;
   captionText.content = timer.caption;
   if (!timer.isStarted) {
-    keyLifecycle.content = "s start";
+    keyLifecycle.content = "space start";
   }
   if (timer.isStarted && timer.isRunning) {
-    keyLifecycle.content = "p pause";
+    keyLifecycle.content = "space pause";
   }
   if (timer.isStarted && !timer.isRunning) {
-    keyLifecycle.content = "r resume";
+    keyLifecycle.content = "space resume";
   }
 }, 250);
 
@@ -41,15 +42,10 @@ renderer.keyInput.on("keypress", (key) => {
     process.exit();
   }
 
-  if (key.name === "s") {
+  if (key.name === "space") {
+    playSound(process.env.TOGGLE_SOUND_PATH);
     if (!timer.isStarted) timer.start();
-  }
-
-  if (key.name === "p") {
-    if (timer.isStarted && timer.isRunning) timer.stop();
-  }
-
-  if (key.name === "r") {
-    if (timer.isStarted && !timer.isRunning) timer.resume();
+    else if (timer.isStarted && timer.isRunning) timer.stop();
+    else if (timer.isStarted && !timer.isRunning) timer.resume();
   }
 });

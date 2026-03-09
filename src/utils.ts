@@ -1,3 +1,7 @@
+import { exec } from "child_process";
+import { promisify } from "util";
+import { logger } from "./logger.js";
+
 /**
  * Creates a string representation of the countdown.
  * @param seconds - amount of seconds to display as countdown string
@@ -9,4 +13,19 @@ export function countdownString(seconds: number): string {
   const minutesStr = minutes.toString().padStart(2, "0");
   const secondsStr = remainingSeconds.toString().padStart(2, "0");
   return `${minutesStr}:${secondsStr}`;
+}
+
+/**
+ * Plays a sound (paplay)
+ * @param path - path to audio file
+ * @example playSound('foo.mp3') -> executes "paplay foo.mp3"
+ */
+export async function playSound(path: string | undefined) {
+  if (!path) return;
+  const execPromise = promisify(exec);
+  try {
+    await execPromise(`paplay ${path}`);
+  } catch (error) {
+    logger.error(`Unable to play ${path}: ${error}`);
+  }
 }

@@ -1,6 +1,7 @@
 import type { PomodoroSettings } from "./types.js";
 import { logger } from "./logger.js";
 import { countdownString } from "./utils.js";
+import { playSound } from "./utils.js";
 
 export class Timer {
   // state
@@ -81,6 +82,7 @@ export class Timer {
   handleNextPeriod() {
     this.stop();
     this.isStarted = false;
+    playSound(process.env.CHIME_SOUND_PATH);
     if (this.isWork) {
       this.lapsCompleted++;
       this.isWork = false;
