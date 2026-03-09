@@ -9,10 +9,12 @@ import {
 import { type InitialData } from "./types.js";
 
 export function createLayout(renderer: CliRenderer, initialData: InitialData) {
+  const offWhite = "#ccc";
+  const gray = "#777";
   const timeText = new ASCIIFontRenderable(renderer, {
     id: "timeleft",
     font: "block",
-    color: RGBA.fromHex("#ccc"),
+    color: RGBA.fromHex(offWhite),
     text: initialData.timeLeft,
     justifyContent: "center",
     alignItems: "center",
@@ -23,35 +25,35 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     content: `Pomodori: ${initialData.pomodori}`,
     justifyContent: "center",
     alignItems: "center",
-    fg: RGBA.fromHex("#ccc"),
+    fg: RGBA.fromHex(offWhite),
   });
 
   const captionText = new TextRenderable(renderer, {
     id: "caption",
     content: initialData.caption,
     justifyContent: "center",
-    fg: RGBA.fromHex("#ccc"),
+    fg: RGBA.fromHex(offWhite),
   });
 
   const separator = new TextRenderable(renderer, {
     content: "______________________________________",
-    fg: RGBA.fromHex("#777"),
+    fg: RGBA.fromHex(gray),
   });
 
   const keyLifecycle = new TextRenderable(renderer, {
     id: "lifecycle",
     content: "space start",
-    fg: RGBA.fromHex("#ccc"),
+    fg: RGBA.fromHex(offWhite),
   });
 
   const keyZen = new TextRenderable(renderer, {
     content: "z zen",
-    fg: RGBA.fromHex("#ccc"),
+    fg: RGBA.fromHex(offWhite),
   });
 
   const keyQuit = new TextRenderable(renderer, {
     content: "q quit",
-    fg: RGBA.fromHex("#ccc"),
+    fg: RGBA.fromHex(offWhite),
   });
 
   const root = Box(
@@ -63,8 +65,6 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     Box(
       {
         justifyContent: "center",
-        marginBottom: 1.5,
-        border: true,
       },
       captionText,
     ),
@@ -72,13 +72,14 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
       {
         justifyContent: "center",
         alignItems: "flex-start",
+        marginTop: 1,
+        marginBottom: 1,
       },
       timeText,
     ),
     Box(
       {
         justifyContent: "center",
-        marginTop: 0.8,
       },
       pomodoriText,
     ),
@@ -86,6 +87,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
       {
         justifyContent: "center",
         marginTop: 1,
+        marginBottom: 1,
       },
       separator,
     ),
@@ -94,7 +96,6 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
         flexDirection: "row",
         justifyContent: "space-between",
         width: 40,
-        marginTop: 1,
       },
       keyLifecycle,
       keyZen,

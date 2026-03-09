@@ -36,7 +36,7 @@ function hideElements() {
   keyLifecycle.content = "";
   keyZen.content = "";
   keyQuit.content = "";
-  timeText.marginTop = 3;
+  timeText.marginTop = 4;
 }
 
 function showElements() {
@@ -54,7 +54,7 @@ function showElements() {
   if (timer.isStarted && !timer.isRunning) {
     keyLifecycle.content = "space resume";
   }
-  timeText.marginTop = -1;
+  timeText.marginTop = 1;
 }
 
 function toggleZenMode() {
