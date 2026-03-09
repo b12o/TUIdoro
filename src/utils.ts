@@ -29,3 +29,20 @@ export async function playSound(path: string | undefined) {
     logger.error(`Unable to play ${path}: ${error}`);
   }
 }
+
+export function getSeconds(minute: number) {
+  return minute * 60;
+}
+
+export function validateTime(time: number) {
+  return time > 0 && time < 60;
+}
+
+export function validateInterval(interval: number): boolean {
+  return interval > 0 && interval < 99;
+}
+
+export function validateHex(hex: string) {
+  // Validates: # followed by 3 or 6 hex characters
+  return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
+}

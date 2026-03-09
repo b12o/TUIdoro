@@ -1,9 +1,9 @@
 {
-  "workDuration": 15,
-  "shortBreakDuration": 3,
-  "longBreakDuration": 9,
+  "workDuration": 2,
+  "shortBreakDuration": 1,
+  "longBreakDuration": 2,
   "longBreakAfter": 4,
   "workColor": "#cccccc",
-  "shortBreakColor": "#34d399",
+  "shortBreakColor": "#60a5fa",
   "longBreakColor": "#a78bfa"
 }

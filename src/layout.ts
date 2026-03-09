@@ -2,7 +2,6 @@ import {
   type CliRenderer,
   ASCIIFontRenderable,
   TextRenderable,
-  Text,
   Box,
   RGBA,
 } from "@opentui/core";
@@ -34,7 +33,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     fg: RGBA.fromHex("#ccc"),
   });
 
-  const separator = Text({
+  const separator = new TextRenderable(renderer, {
     content: "______________________________________",
     fg: RGBA.fromHex("#777"),
   });
@@ -45,17 +44,12 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     fg: RGBA.fromHex("#ccc"),
   });
 
-  const keyOptions = Text({
-    content: "o options",
-    fg: RGBA.fromHex("#ccc"),
-  });
-
-  const keyZen = Text({
+  const keyZen = new TextRenderable(renderer, {
     content: "z zen",
     fg: RGBA.fromHex("#ccc"),
   });
 
-  const keyQuit = Text({
+  const keyQuit = new TextRenderable(renderer, {
     content: "q quit",
     fg: RGBA.fromHex("#ccc"),
   });
@@ -70,6 +64,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
       {
         justifyContent: "center",
         marginBottom: 1.5,
+        border: true,
       },
       captionText,
     ),
@@ -102,10 +97,19 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
         marginTop: 1,
       },
       keyLifecycle,
-      keyOptions,
       keyZen,
       keyQuit,
     ),
   );
-  return { root, timeText, pomodoriText, captionText, keyLifecycle };
+
+  return {
+    root,
+    timeText,
+    pomodoriText,
+    captionText,
+    separator,
+    keyLifecycle,
+    keyZen,
+    keyQuit,
+  };
 }

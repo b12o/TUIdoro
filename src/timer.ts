@@ -1,7 +1,13 @@
 import type { PomodoroSettings } from "./types.js";
 import { logger } from "./logger.js";
-import { countdownString } from "./utils.js";
-import { playSound } from "./utils.js";
+import {
+  countdownString,
+  playSound,
+  getSeconds,
+  validateTime,
+  validateInterval,
+  validateHex,
+} from "./utils.js";
 
 export class Timer {
   // state
@@ -26,15 +32,41 @@ export class Timer {
   shortBreakCaption = "Time for a short break.";
   longBreakCaption = "Time for a long break.";
   timeLeftFormatted = "";
+  workColor: string = "#ccc";
+  shortBreakColor: string = "#ccc";
+  longBreakColor: string = "#ccc";
+  activeColor: string = "#ccc";
 
   constructor(settingsData: PomodoroSettings) {
     this.caption = this.workCaption;
-    this.workDurationSeconds = settingsData.workDuration;
+    if (validateTime(settingsData.workDuration))
+      this.workDurationSeconds = getSeconds(settingsData.workDuration);
+
+    if (validateTime(settingsData.shortBreakDuration))
+      this.shortBreakDurationSeconds = getSeconds(
+        settingsData.shortBreakDuration,
+      );
+
+    if (validateTime(settingsData.longBreakDuration))
+      this.longBreakDurationSeconds = getSeconds(
+        settingsData.longBreakDuration,
+      );
+
+    if (validateInterval(settingsData.longBreakAfter))
+      this.longBreakAfter = settingsData.longBreakAfter;
+
+    if (validateHex(settingsData.workColor))
+      this.workColor = settingsData.workColor;
+
+    if (validateHex(settingsData.shortBreakColor))
+      this.shortBreakColor = settingsData.shortBreakColor;
+
+    if (validateHex(settingsData.longBreakColor))
+      this.longBreakColor = settingsData.longBreakColor;
+
     this.currentTimeLeft = this.workDurationSeconds;
-    this.shortBreakDurationSeconds = settingsData.shortBreakDuration;
-    this.longBreakDurationSeconds = settingsData.longBreakDuration;
-    this.longBreakAfter = settingsData.longBreakAfter;
     this.timeLeftFormatted = countdownString(this.workDurationSeconds);
+    this.activeColor = this.workColor;
     // should always start in work mode
     this.isWork = true;
 
@@ -65,7 +97,7 @@ export class Timer {
     clearInterval(this.intervalId);
   }
 
-  resume(msg: string = "Resuming ...."): void {
+  resume(msg: string = "Resuming ..."): void {
     logger.info(msg);
     this.isRunning = true;
     clearInterval(this.intervalId);
@@ -88,9 +120,11 @@ export class Timer {
       this.isWork = false;
       this.isBreak = true;
       if (this.lapsCompleted % this.longBreakAfter == 0) {
+        this.activeColor = this.longBreakColor;
         this.currentTimeLeft = this.longBreakDurationSeconds;
         this.caption = this.longBreakCaption;
       } else {
+        this.activeColor = this.shortBreakColor;
         this.currentTimeLeft = this.shortBreakDurationSeconds;
         this.caption = this.shortBreakCaption;
       }
@@ -98,6 +132,7 @@ export class Timer {
     } else if (this.isBreak) {
       this.isBreak = false;
       this.isWork = true;
+      this.activeColor = this.workColor;
       this.currentTimeLeft = this.workDurationSeconds;
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       this.caption = this.workCaption;
