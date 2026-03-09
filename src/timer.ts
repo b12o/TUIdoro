@@ -9,7 +9,7 @@ export class Timer {
   isRunning = false;
   isWork = false;
   isBreak = false;
-  private intervalId: NodeJS.Timeout | undefined;
+  intervalId: NodeJS.Timeout | undefined;
 
   // pomodoro settings
   workDurationSeconds = 1500; // 25 minutes
@@ -87,9 +87,14 @@ export class Timer {
       this.lapsCompleted++;
       this.isWork = false;
       this.isBreak = true;
-      this.currentTimeLeft = this.shortBreakDurationSeconds;
+      if (this.lapsCompleted % this.longBreakAfter == 0) {
+        this.currentTimeLeft = this.longBreakDurationSeconds;
+        this.caption = this.longBreakCaption;
+      } else {
+        this.currentTimeLeft = this.shortBreakDurationSeconds;
+        this.caption = this.shortBreakCaption;
+      }
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
-      this.caption = this.shortBreakCaption;
     } else if (this.isBreak) {
       this.isBreak = false;
       this.isWork = true;

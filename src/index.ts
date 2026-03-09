@@ -38,6 +38,7 @@ setInterval(() => {
 renderer.keyInput.on("keypress", (key) => {
   if (key.name === "q") {
     logger.info("Quitting ...");
+    if (timer.intervalId) clearInterval(timer.intervalId);
     renderer.destroy();
     process.exit();
   }
