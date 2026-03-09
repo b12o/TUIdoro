@@ -4,6 +4,7 @@ import {
   TextRenderable,
   Text,
   Box,
+  RGBA,
 } from "@opentui/core";
 
 import { type InitialData } from "./types.js";
@@ -12,6 +13,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
   const timeText = new ASCIIFontRenderable(renderer, {
     id: "timeleft",
     font: "block",
+    color: RGBA.fromHex("#ccc"),
     text: initialData.timeLeft,
     justifyContent: "center",
     alignItems: "center",
@@ -22,33 +24,40 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     content: `Pomodori: ${initialData.pomodori}`,
     justifyContent: "center",
     alignItems: "center",
+    fg: RGBA.fromHex("#ccc"),
   });
 
   const captionText = new TextRenderable(renderer, {
     id: "caption",
     content: initialData.caption,
     justifyContent: "center",
+    fg: RGBA.fromHex("#ccc"),
   });
 
   const separator = Text({
     content: "______________________________________",
+    fg: RGBA.fromHex("#777"),
   });
 
   const keyLifecycle = new TextRenderable(renderer, {
     id: "lifecycle",
-    content: "s start",
+    content: "space start",
+    fg: RGBA.fromHex("#ccc"),
   });
 
   const keyOptions = Text({
     content: "o options",
+    fg: RGBA.fromHex("#ccc"),
   });
 
   const keyZen = Text({
     content: "z zen",
+    fg: RGBA.fromHex("#ccc"),
   });
 
   const keyQuit = Text({
     content: "q quit",
+    fg: RGBA.fromHex("#ccc"),
   });
 
   const root = Box(
