@@ -10,7 +10,7 @@ const settingsData: PomodoroSettings = pomodoroSettings;
 const timer = new Timer(settingsData);
 const renderer = await createCliRenderer({ exitOnCtrlC: true });
 
-let zenModeEnabled = settingsData.zenMode;
+let zenModeEnabled = settingsData.zenMode ?? false;
 
 const {
   root,
@@ -59,26 +59,18 @@ function showElements() {
 
 function toggleZenMode() {
   zenModeEnabled = !zenModeEnabled;
+  const status = zenModeEnabled ? "Enabled" : "Disabled";
+  logger.info(`${status} zen mode.`);
+  zenModeEnabled ? hideElements() : showElements();
 }
 
-// do this in order to prevent 250ms UI delay if zen mode was enabled in settings.
-if (zenModeEnabled) {
-  hideElements();
-} else {
-  showElements();
-}
+// initial render
+zenModeEnabled ? hideElements() : showElements();
 
 setInterval(() => {
   timeText.text = timer.timeLeftFormatted;
   timeText.color = RGBA.fromHex(timer.activeColor);
-  if (zenModeEnabled) {
-    hideElements();
-  } else {
-    showElements();
-  }
 }, 250);
-
-logger.info(`Zen mode enabled: ${zenModeEnabled}`);
 
 renderer.keyInput.on("keypress", (key) => {
   if (key.name === "q") {
@@ -93,10 +85,11 @@ renderer.keyInput.on("keypress", (key) => {
     if (!timer.isStarted) timer.start();
     else if (timer.isStarted && timer.isRunning) timer.stop();
     else if (timer.isStarted && !timer.isRunning) timer.resume();
+    // show "resume/pause" in case zen mode is disabled
+    zenModeEnabled ? hideElements() : showElements();
   }
 
   if (key.name === "z") {
-    logger.info(`Pressed zen mode toggle.`);
     toggleZenMode();
   }
 });

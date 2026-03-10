@@ -80,9 +80,6 @@ export class Timer {
       `long break duration (seconds): ${this.longBreakDurationSeconds}`,
     );
     logger.debug(`long break after (pomodori): ${this.longBreakAfter}`);
-
-    // TODO: make sure that if a config is passed to the constructor, that the
-    // durations are between 1-100
   }
 
   start(): void {
@@ -137,7 +134,5 @@ export class Timer {
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       this.caption = this.workCaption;
     }
-    // TODO: based on settings automatically resume or wait for user input
-    // this.resume();
   }
 }
