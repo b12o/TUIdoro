@@ -8,7 +8,11 @@ import pomodoroSettings from "../settings.json";
 
 const settingsData: PomodoroSettings = pomodoroSettings;
 const timer = new Timer(settingsData);
-const renderer = await createCliRenderer({ exitOnCtrlC: true });
+
+const renderer = await createCliRenderer({
+  exitOnCtrlC: true,
+  onDestroy: cleanUp,
+});
 
 let zenModeEnabled = settingsData.zenMode ?? false;
 
@@ -28,6 +32,35 @@ const {
 });
 
 renderer.root.add(root);
+
+// initial render
+zenModeEnabled ? hideElements() : showElements();
+
+const mainLoop = setInterval(() => {
+  timeText.text = timer.timeLeftFormatted;
+  timeText.color = RGBA.fromHex(timer.activeColor);
+  // 250ms in order to respond fairly quickly to timer.ts updates without
+  // unnecessarily re-rendering UI
+}, 250);
+
+renderer.keyInput.on("keypress", (key) => {
+  if (key.name === "q") {
+    renderer.destroy();
+  }
+
+  if (key.name === "space") {
+    playSound(process.env.TOGGLE_SOUND_PATH);
+    if (!timer.isStarted) timer.start();
+    else if (timer.isStarted && timer.isRunning) timer.stop();
+    else if (timer.isStarted && !timer.isRunning) timer.resume();
+    // show "resume/pause" in case zen mode is disabled
+    zenModeEnabled ? hideElements() : showElements();
+  }
+
+  if (key.name === "z") {
+    toggleZenMode();
+  }
+});
 
 function hideElements() {
   captionText.content = "";
@@ -64,32 +97,9 @@ function toggleZenMode() {
   zenModeEnabled ? hideElements() : showElements();
 }
 
-// initial render
-zenModeEnabled ? hideElements() : showElements();
-
-setInterval(() => {
-  timeText.text = timer.timeLeftFormatted;
-  timeText.color = RGBA.fromHex(timer.activeColor);
-}, 250);
-
-renderer.keyInput.on("keypress", (key) => {
-  if (key.name === "q") {
-    logger.info("Quitting ...");
-    if (timer.intervalId) clearInterval(timer.intervalId);
-    renderer.destroy();
-    process.exit();
-  }
-
-  if (key.name === "space") {
-    playSound(process.env.TOGGLE_SOUND_PATH);
-    if (!timer.isStarted) timer.start();
-    else if (timer.isStarted && timer.isRunning) timer.stop();
-    else if (timer.isStarted && !timer.isRunning) timer.resume();
-    // show "resume/pause" in case zen mode is disabled
-    zenModeEnabled ? hideElements() : showElements();
-  }
-
-  if (key.name === "z") {
-    toggleZenMode();
-  }
-});
+function cleanUp() {
+  logger.info("Quitting ...");
+  if (timer.intervalId) clearInterval(timer.intervalId);
+  clearInterval(mainLoop);
+  process.exit();
+}
