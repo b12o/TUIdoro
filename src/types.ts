@@ -6,6 +6,7 @@ export type PomodoroSettings = {
   workColor: string;
   shortBreakColor: string;
   longBreakColor: string;
+  zenMode: boolean;
 };
 
 export type InitialData = {

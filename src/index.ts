@@ -1,5 +1,5 @@
+import { createCliRenderer, RGBA } from "@opentui/core";
 import { logger } from "./logger.js";
-import { createCliRenderer, RGBA, StyledText } from "@opentui/core";
 import type { PomodoroSettings } from "./types.js";
 import { Timer } from "./timer.js";
 import { createLayout } from "./layout.js";
@@ -10,7 +10,7 @@ const settingsData: PomodoroSettings = pomodoroSettings;
 const timer = new Timer(settingsData);
 const renderer = await createCliRenderer({ exitOnCtrlC: true });
 
-let zenModeEnabled = false;
+let zenModeEnabled = settingsData.zenMode;
 
 const {
   root,
@@ -59,6 +59,13 @@ function showElements() {
 
 function toggleZenMode() {
   zenModeEnabled = !zenModeEnabled;
+}
+
+// do this in order to prevent 250ms UI delay if zen mode was enabled in settings.
+if (zenModeEnabled) {
+  hideElements();
+} else {
+  showElements();
 }
 
 setInterval(() => {
