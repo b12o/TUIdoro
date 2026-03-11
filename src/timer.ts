@@ -4,8 +4,8 @@ import {
   countdownString,
   playSound,
   getSeconds,
-  validateTime,
-  validateInterval,
+  validateWorkInterval,
+  validateBreakInterval,
   validateHex,
 } from "./utils.js";
 
@@ -61,20 +61,20 @@ export class Timer {
   }
 
   private validateInput(settingsData: PomodoroSettings) {
-    if (validateTime(settingsData.workDuration))
+    if (validateWorkInterval(settingsData.workDuration))
       this.workDurationSeconds = getSeconds(settingsData.workDuration);
 
-    if (validateTime(settingsData.shortBreakDuration))
+    if (validateWorkInterval(settingsData.shortBreakDuration))
       this.shortBreakDurationSeconds = getSeconds(
         settingsData.shortBreakDuration,
       );
 
-    if (validateTime(settingsData.longBreakDuration))
+    if (validateWorkInterval(settingsData.longBreakDuration))
       this.longBreakDurationSeconds = getSeconds(
         settingsData.longBreakDuration,
       );
 
-    if (validateInterval(settingsData.longBreakAfter))
+    if (validateBreakInterval(settingsData.longBreakAfter))
       this.longBreakAfter = settingsData.longBreakAfter;
 
     if (validateHex(settingsData.workColor))

@@ -34,12 +34,12 @@ export function getSeconds(minute: number) {
   return minute * 60;
 }
 
-export function validateTime(time: number) {
+export function validateWorkInterval(time: number) {
   return Number.isInteger(time) && time > 0 && time < 60;
 }
 
-export function validateInterval(interval: number): boolean {
-  return Number.isInteger(interval) && interval > 0 && interval < 99;
+export function validateBreakInterval(interval: number): boolean {
+  return Number.isInteger(interval) && interval > 0 && interval < 60;
 }
 
 export function validateHex(hex: string) {

@@ -1,20 +1,30 @@
+import fs from "node:fs";
 import { createCliRenderer, RGBA } from "@opentui/core";
 import { logger } from "./logger.js";
 import type { PomodoroSettings, TimerState } from "./types.js";
 import { Timer } from "./timer.js";
 import { createLayout } from "./layout.js";
 import { playSound } from "./utils.js";
-import pomodoroSettings from "../settings.json";
 
-const settingsData: PomodoroSettings = pomodoroSettings;
-const timer = new Timer(settingsData);
+export function loadConfig(path: string): PomodoroSettings {
+  try {
+    const rawInput = fs.readFileSync(path, "utf8");
+    const settingsData: PomodoroSettings = JSON.parse(rawInput);
+    return settingsData;
+  } catch {
+    console.log("Please fix your settings file first.");
+    process.exit(1);
+  }
+}
+const config = loadConfig(process.env.SETTINGS_FILE!);
+const timer = new Timer(config);
 
 const renderer = await createCliRenderer({
   exitOnCtrlC: true,
   onDestroy: cleanUp,
 });
 
-let zenModeEnabled = settingsData.zenMode ?? false;
+let zenModeEnabled = config.zenMode ?? false;
 
 const {
   root,
