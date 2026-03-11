@@ -14,3 +14,5 @@ export type InitialData = {
   pomodori: number;
   caption: string;
 };
+
+export type TimerState = "IDLE" | "RUNNING" | "PAUSED";
