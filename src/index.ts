@@ -13,6 +13,7 @@ export function loadConfig(path: string): PomodoroSettings {
     return settingsData;
   } catch {
     console.log("Please fix your settings file first.");
+    logger.error("Invalid configuration file. Quitting...");
     process.exit(1);
   }
 }
@@ -81,6 +82,7 @@ renderer.keyInput.on("keypress", (key) => {
       const timerState = timer.getState();
       transition[timerState]();
       zenModeEnabled ? hideElements() : showElements();
+      break;
     }
   }
 });
