@@ -1,4 +1,4 @@
-import type { PomodoroSettings } from "./types.js";
+import type { PomodoroSettings, TimerState } from "./types.js";
 import { logger } from "./logger.js";
 import {
   countdownString,
@@ -8,6 +8,8 @@ import {
   validateInterval,
   validateHex,
 } from "./utils.js";
+
+const OFF_WHITE = "#ccc";
 
 export class Timer {
   // state
@@ -27,18 +29,38 @@ export class Timer {
   currentTimeLeft = this.workDurationSeconds;
 
   // UI
-  caption = "";
+  caption = "Lock in.";
   workCaption = "Lock in.";
   shortBreakCaption = "Time for a short break.";
   longBreakCaption = "Time for a long break.";
   timeLeftFormatted = "";
-  workColor: string = "#ccc";
-  shortBreakColor: string = "#ccc";
-  longBreakColor: string = "#ccc";
-  activeColor: string = "#ccc";
+  workColor = OFF_WHITE;
+  shortBreakColor = OFF_WHITE;
+  longBreakColor = OFF_WHITE;
+  activeColor = OFF_WHITE;
 
   constructor(settingsData: PomodoroSettings) {
-    this.caption = this.workCaption;
+    this.validateInput(settingsData);
+
+    this.currentTimeLeft = this.workDurationSeconds;
+    this.timeLeftFormatted = countdownString(this.workDurationSeconds);
+    this.activeColor = this.workColor;
+    // should always start in work mode
+    this.isWork = true;
+
+    logger.debug("\n\n=================================\n");
+    logger.debug("Initialized timer with following settings:");
+    logger.debug(`workduration (seconds): ${this.workDurationSeconds}`);
+    logger.debug(
+      `short break duration (seconds): ${this.shortBreakDurationSeconds}`,
+    );
+    logger.debug(
+      `long break duration (seconds): ${this.longBreakDurationSeconds}`,
+    );
+    logger.debug(`long break after (pomodori): ${this.longBreakAfter}`);
+  }
+
+  private validateInput(settingsData: PomodoroSettings) {
     if (validateTime(settingsData.workDuration))
       this.workDurationSeconds = getSeconds(settingsData.workDuration);
 
@@ -63,23 +85,12 @@ export class Timer {
 
     if (validateHex(settingsData.longBreakColor))
       this.longBreakColor = settingsData.longBreakColor;
+  }
 
-    this.currentTimeLeft = this.workDurationSeconds;
-    this.timeLeftFormatted = countdownString(this.workDurationSeconds);
-    this.activeColor = this.workColor;
-    // should always start in work mode
-    this.isWork = true;
-
-    logger.debug("\n\n=================================\n");
-    logger.debug("Initialized timer with following settings:");
-    logger.debug(`workduration (seconds): ${this.workDurationSeconds}`);
-    logger.debug(
-      `short break duration (seconds): ${this.shortBreakDurationSeconds}`,
-    );
-    logger.debug(
-      `long break duration (seconds): ${this.longBreakDurationSeconds}`,
-    );
-    logger.debug(`long break after (pomodori): ${this.longBreakAfter}`);
+  getState(): TimerState {
+    if (!this.isStarted) return "IDLE";
+    if (this.isRunning) return "RUNNING";
+    else return "PAUSED";
   }
 
   start(): void {
@@ -102,7 +113,8 @@ export class Timer {
   }
 
   private countdown() {
-    this.timeLeftFormatted = countdownString(--this.currentTimeLeft);
+    this.currentTimeLeft--;
+    this.timeLeftFormatted = countdownString(this.currentTimeLeft);
     if (this.currentTimeLeft < 0) {
       this.handleNextPeriod();
     }
@@ -116,7 +128,7 @@ export class Timer {
       this.lapsCompleted++;
       this.isWork = false;
       this.isBreak = true;
-      if (this.lapsCompleted % this.longBreakAfter == 0) {
+      if (this.lapsCompleted % this.longBreakAfter === 0) {
         this.activeColor = this.longBreakColor;
         this.currentTimeLeft = this.longBreakDurationSeconds;
         this.caption = this.longBreakCaption;

@@ -1,6 +1,6 @@
 import { createCliRenderer, RGBA } from "@opentui/core";
 import { logger } from "./logger.js";
-import type { PomodoroSettings } from "./types.js";
+import type { PomodoroSettings, TimerState } from "./types.js";
 import { Timer } from "./timer.js";
 import { createLayout } from "./layout.js";
 import { playSound } from "./utils.js";
@@ -34,31 +34,44 @@ const {
 renderer.root.add(root);
 
 // initial render
+timeText.color = RGBA.fromHex(timer.activeColor);
 zenModeEnabled ? hideElements() : showElements();
 
+// 250ms in order to respond fairly quickly to timer.ts updates without
+// unnecessarily re-rendering UI
+const RENDER_INTERVAL = 250;
 const mainLoop = setInterval(() => {
   timeText.text = timer.timeLeftFormatted;
   timeText.color = RGBA.fromHex(timer.activeColor);
-  // 250ms in order to respond fairly quickly to timer.ts updates without
-  // unnecessarily re-rendering UI
-}, 250);
+  // update elements that might change automatically based on timer state.
+  if (!zenModeEnabled) {
+    captionText.content = timer.caption;
+    pomodoriText.content = `Pomodori: ${timer.lapsCompleted}`;
+    if (timer.getState() === "IDLE") keyLifecycle.content = "space start";
+  }
+}, RENDER_INTERVAL);
+
+const transition: Record<TimerState, () => void> = {
+  IDLE: () => timer.start(),
+  RUNNING: () => timer.stop(),
+  PAUSED: () => timer.resume(),
+};
 
 renderer.keyInput.on("keypress", (key) => {
-  if (key.name === "q") {
-    renderer.destroy();
-  }
-
-  if (key.name === "space") {
-    playSound(process.env.TOGGLE_SOUND_PATH);
-    if (!timer.isStarted) timer.start();
-    else if (timer.isStarted && timer.isRunning) timer.stop();
-    else if (timer.isStarted && !timer.isRunning) timer.resume();
-    // show "resume/pause" in case zen mode is disabled
-    zenModeEnabled ? hideElements() : showElements();
-  }
-
-  if (key.name === "z") {
-    toggleZenMode();
+  switch (key.name) {
+    case "q":
+      renderer.destroy();
+      break;
+    case "z":
+      toggleZenMode();
+      break;
+    case "space": {
+      // use block scope to prevent const hoisting shenanigans
+      playSound(process.env.TOGGLE_SOUND_PATH);
+      const timerState = timer.getState();
+      transition[timerState]();
+      zenModeEnabled ? hideElements() : showElements();
+    }
   }
 });
 
@@ -78,14 +91,15 @@ function showElements() {
   keyZen.content = "z zen";
   keyQuit.content = "q quit";
   separator.content = "______________________________________";
-  if (!timer.isStarted) {
-    keyLifecycle.content = "space start";
-  }
-  if (timer.isStarted && timer.isRunning) {
-    keyLifecycle.content = "space pause";
-  }
-  if (timer.isStarted && !timer.isRunning) {
-    keyLifecycle.content = "space resume";
+  switch (timer.getState()) {
+    case "IDLE":
+      keyLifecycle.content = "space start";
+      break;
+    case "RUNNING":
+      keyLifecycle.content = "space pause";
+      break;
+    case "PAUSED":
+      keyLifecycle.content = "space resume";
   }
   timeText.marginTop = 1;
 }
