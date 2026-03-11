@@ -115,7 +115,7 @@ export class Timer {
   private countdown() {
     this.currentTimeLeft--;
     this.timeLeftFormatted = countdownString(this.currentTimeLeft);
-    if (this.currentTimeLeft < 0) {
+    if (this.currentTimeLeft <= 0) {
       this.handleNextPeriod();
     }
   }
