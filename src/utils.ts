@@ -35,11 +35,11 @@ export function getSeconds(minute: number) {
 }
 
 export function validateTime(time: number) {
-  return time > 0 && time < 60;
+  return Number.isInteger(time) && time > 0 && time < 60;
 }
 
 export function validateInterval(interval: number): boolean {
-  return interval > 0 && interval < 99;
+  return Number.isInteger(interval) && interval > 0 && interval < 99;
 }
 
 export function validateHex(hex: string) {
