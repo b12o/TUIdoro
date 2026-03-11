@@ -50,4 +50,10 @@ describe("validate hex code", () => {
   test("code not of len 3 or 6", () => {
     expect(validateHex("#1234")).toBe(false);
   });
+  test("correct example 1", () => {
+    expect(validateHex("#123")).toBe(true);
+  });
+  test("correct example 2", () => {
+    expect(validateHex("#123456")).toBe(true);
+  });
 });
