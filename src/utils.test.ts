@@ -37,6 +37,7 @@ describe("validate interval", () => {
   });
 });
 
+// validate hex code test
 describe("validate hex code", () => {
   test("empty", () => {
     expect(validateHex("")).toBe(false);
