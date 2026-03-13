@@ -9,6 +9,9 @@ import {
   validateHex,
 } from "./utils.js";
 
+//@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
+import chime from "../assets/tuidoro_chime.mp3" with { type: "file" };
+
 const OFF_WHITE = "#ccc";
 
 export class Timer {
@@ -123,7 +126,7 @@ export class Timer {
   handleNextPeriod() {
     this.stop();
     this.isStarted = false;
-    playSound(process.env.CHIME_SOUND_PATH);
+    playSound(chime);
     if (this.isWork) {
       this.lapsCompleted++;
       this.isWork = false;

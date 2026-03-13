@@ -1,12 +1,8 @@
-import { exec } from "child_process";
-import { promisify } from "util";
-import { logger } from "./logger.js";
+import os from "os";
+import path from "path";
+import { APP_NAME } from "./index.js";
+import { file } from "bun";
 
-/**
- * Creates a string representation of the countdown.
- * @param seconds - amount of seconds to display as countdown string
- * @example 342 => "05:42"
- */
 export function countdownString(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
@@ -15,19 +11,13 @@ export function countdownString(seconds: number): string {
   return `${minutesStr}:${secondsStr}`;
 }
 
-/**
- * Plays a sound (paplay)
- * @param path - path to audio file
- * @example playSound('foo.mp3') -> executes "paplay foo.mp3"
- */
-export async function playSound(path: string | undefined) {
-  if (!path) return;
-  const execPromise = promisify(exec);
-  try {
-    await execPromise(`paplay ${path}`);
-  } catch (error) {
-    logger.error(`Unable to play ${path}: ${error}`);
-  }
+export async function playSound(audio: string) {
+  const tmpId = Math.random().toString(36).slice(2);
+  const playPath = path.join(os.tmpdir(), `${APP_NAME}_${tmpId}.mp3`);
+  await Bun.write(playPath, await file(audio).bytes());
+  const proc = Bun.spawn(["paplay", playPath]);
+  await proc.exited;
+  await Bun.file(playPath).unlink();
 }
 
 export function getSeconds(minute: number) {

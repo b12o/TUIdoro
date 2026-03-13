@@ -1,10 +1,17 @@
-import fs from "node:fs";
+import path from "path";
+import os from "os";
+import fs from "fs";
 import { createCliRenderer, RGBA } from "@opentui/core";
 import { logger } from "./logger.js";
 import type { PomodoroSettings, TimerState } from "./types.js";
 import { Timer } from "./timer.js";
 import { createLayout } from "./layout.js";
 import { playSound } from "./utils.js";
+
+//@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
+import toggleSound from "../assets/tuidoro_toggle.mp3" with { type: "file" };
+
+export const APP_NAME = "tuidoro";
 
 export function loadConfig(path: string): PomodoroSettings {
   try {
@@ -13,11 +20,17 @@ export function loadConfig(path: string): PomodoroSettings {
     return settingsData;
   } catch {
     console.log("Please fix your settings file first.");
-    logger.error("Invalid configuration file. Quitting...");
     process.exit(1);
   }
 }
-const config = loadConfig(process.env.SETTINGS_FILE!);
+
+const configPath = path.join(
+  os.homedir(),
+  ".config",
+  APP_NAME,
+  "settings.json",
+);
+const config = loadConfig(configPath);
 const timer = new Timer(config);
 
 const renderer = await createCliRenderer({
@@ -78,7 +91,7 @@ renderer.keyInput.on("keypress", (key) => {
       break;
     case "space": {
       // use block scope to prevent const hoisting shenanigans
-      playSound(process.env.TOGGLE_SOUND_PATH);
+      playSound(toggleSound);
       const timerState = timer.getState();
       transition[timerState]();
       zenModeEnabled ? hideElements() : showElements();
