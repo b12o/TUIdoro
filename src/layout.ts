@@ -19,6 +19,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     text: initialData.timeLeft,
     justifyContent: "center",
     alignItems: "center",
+    selectable: false,
   });
 
   const pomodoriText = new TextRenderable(renderer, {
@@ -123,6 +124,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     root,
     captionContainer,
     captionText,
+    timeContainer,
     timeText,
     pomodoriContainer,
     pomodoriText,

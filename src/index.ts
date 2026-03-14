@@ -44,6 +44,7 @@ const {
   root,
   captionContainer,
   captionText,
+  timeContainer,
   timeText,
   pomodoriContainer,
   pomodoriText,
@@ -88,6 +89,11 @@ const transition: Record<TimerState, () => void> = {
   PAUSED: () => timer.resume(),
 };
 
+timeContainer.onMouseUp = () => {
+  playSound(toggleSound);
+  transition[timer.getState()]();
+};
+
 renderer.keyInput.on("keypress", (key) => {
   switch (key.name) {
     case "q":
@@ -99,8 +105,7 @@ renderer.keyInput.on("keypress", (key) => {
     case "space": {
       // use block scope to prevent const hoisting shenanigans
       playSound(toggleSound);
-      const timerState = timer.getState();
-      transition[timerState]();
+      transition[timer.getState()]();
       break;
     }
   }
