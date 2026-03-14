@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun run src/index.ts",
     "test": "bun test ./src/",
-    "build": "bun build src/index.ts --compile --outfile tuidoro"
+    "build": "bun build src/index.ts --compile --outfile dist/tuidoro"
   },
   "devDependencies": {
     "@types/bun": "latest"
