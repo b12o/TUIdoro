@@ -1,4 +1,4 @@
-import path from "path";
+import path, { sep } from "path";
 import os from "os";
 import fs from "fs";
 import { createCliRenderer, RGBA } from "@opentui/core";
@@ -42,10 +42,13 @@ let zenModeEnabled = config.zenMode ?? false;
 
 const {
   root,
-  timeText,
-  pomodoriText,
+  captionContainer,
   captionText,
-  separator,
+  timeText,
+  pomodoriContainer,
+  pomodoriText,
+  separatorContainer,
+  optionsContainer,
   keyLifecycle,
   keyZen,
   keyQuit,
@@ -59,7 +62,7 @@ renderer.root.add(root);
 
 // initial render
 timeText.color = RGBA.fromHex(timer.activeColor);
-zenModeEnabled ? hideElements() : showElements();
+showHideElements();
 
 // 250ms in order to respond fairly quickly to timer.ts updates without
 // unnecessarily re-rendering UI
@@ -67,11 +70,20 @@ const RENDER_INTERVAL = 250;
 const mainLoop = setInterval(() => {
   timeText.text = timer.timeLeftFormatted;
   timeText.color = RGBA.fromHex(timer.activeColor);
-  // update elements that might change automatically based on timer state.
-  if (!zenModeEnabled) {
-    captionText.content = timer.caption;
-    pomodoriText.content = `Pomodori: ${timer.lapsCompleted}`;
-    if (timer.getState() === "IDLE") keyLifecycle.content = "space start";
+  captionText.content = timer.caption;
+  pomodoriText.content = `Pomodori: ${timer.lapsCompleted}`;
+  keyZen.content = "z zen";
+  keyQuit.content = "q quit";
+  // separator.content = "______________________________________";
+  switch (timer.getState()) {
+    case "IDLE":
+      keyLifecycle.content = "space start";
+      break;
+    case "RUNNING":
+      keyLifecycle.content = "space pause";
+      break;
+    case "PAUSED":
+      keyLifecycle.content = "space resume";
   }
 }, RENDER_INTERVAL);
 
@@ -94,46 +106,14 @@ renderer.keyInput.on("keypress", (key) => {
       playSound(toggleSound);
       const timerState = timer.getState();
       transition[timerState]();
-      zenModeEnabled ? hideElements() : showElements();
       break;
     }
   }
 });
 
-function hideElements() {
-  captionText.content = "";
-  pomodoriText.content = "";
-  separator.content = "";
-  keyLifecycle.content = "";
-  keyZen.content = "";
-  keyQuit.content = "";
-  timeText.marginTop = 4;
-}
-
-function showElements() {
-  captionText.content = timer.caption;
-  pomodoriText.content = `Pomodori: ${timer.lapsCompleted}`;
-  keyZen.content = "z zen";
-  keyQuit.content = "q quit";
-  separator.content = "______________________________________";
-  switch (timer.getState()) {
-    case "IDLE":
-      keyLifecycle.content = "space start";
-      break;
-    case "RUNNING":
-      keyLifecycle.content = "space pause";
-      break;
-    case "PAUSED":
-      keyLifecycle.content = "space resume";
-  }
-  timeText.marginTop = 1;
-}
-
 function toggleZenMode() {
   zenModeEnabled = !zenModeEnabled;
-  const status = zenModeEnabled ? "Enabled" : "Disabled";
-  logger.info(`${status} zen mode.`);
-  zenModeEnabled ? hideElements() : showElements();
+  showHideElements();
 }
 
 function cleanUp() {
@@ -141,4 +121,11 @@ function cleanUp() {
   if (timer.intervalId) clearInterval(timer.intervalId);
   clearInterval(mainLoop);
   process.exit();
+}
+
+function showHideElements(): void {
+  captionContainer.visible = !zenModeEnabled;
+  pomodoriContainer.visible = !zenModeEnabled;
+  separatorContainer.visible = !zenModeEnabled;
+  optionsContainer.visible = !zenModeEnabled;
 }

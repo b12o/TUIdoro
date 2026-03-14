@@ -2,6 +2,7 @@ import {
   type CliRenderer,
   ASCIIFontRenderable,
   TextRenderable,
+  BoxRenderable,
   Box,
   RGBA,
 } from "@opentui/core";
@@ -36,7 +37,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
   });
 
   const separator = new TextRenderable(renderer, {
-    content: "______________________________________",
+    content: "_________________________________________",
     fg: RGBA.fromHex(gray),
   });
 
@@ -47,14 +48,56 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
   });
 
   const keyZen = new TextRenderable(renderer, {
+    id: "keyZen",
     content: "z zen",
     fg: RGBA.fromHex(offWhite),
   });
 
   const keyQuit = new TextRenderable(renderer, {
+    id: "keyQuit",
     content: "q quit",
     fg: RGBA.fromHex(offWhite),
   });
+
+  const captionContainer = new BoxRenderable(renderer, {
+    id: "captionContainer",
+    alignItems: "center",
+  });
+  captionContainer.add(captionText);
+
+  const timeContainer = new BoxRenderable(renderer, {
+    id: "timeContainer",
+    alignItems: "flex-start",
+    marginTop: 1,
+    marginBottom: 1,
+  });
+  timeContainer.add(timeText);
+
+  const pomodoriContainer = new BoxRenderable(renderer, {
+    id: "pomodoriContainer",
+    alignItems: "center",
+  });
+  pomodoriContainer.add(pomodoriText);
+
+  const separatorContainer = new BoxRenderable(renderer, {
+    id: "separatorContainer",
+    alignItems: "center",
+    marginTop: 1,
+    marginBottom: 1,
+    width: 42,
+  });
+  separatorContainer.add(separator);
+
+  const optionsContainer = new BoxRenderable(renderer, {
+    id: "optionsContainer",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: 42,
+  });
+  optionsContainer.add(keyLifecycle);
+  optionsContainer.add(keyZen);
+  optionsContainer.add(keyQuit);
 
   const root = Box(
     {
@@ -64,51 +107,27 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     },
     Box(
       {
+        width: 45,
+        alignItems: "center",
         justifyContent: "center",
       },
-      captionText,
-    ),
-    Box(
-      {
-        justifyContent: "center",
-        alignItems: "flex-start",
-        marginTop: 1,
-        marginBottom: 1,
-      },
-      timeText,
-    ),
-    Box(
-      {
-        justifyContent: "center",
-      },
-      pomodoriText,
-    ),
-    Box(
-      {
-        justifyContent: "center",
-        marginTop: 1,
-        marginBottom: 1,
-      },
-      separator,
-    ),
-    Box(
-      {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: 40,
-      },
-      keyLifecycle,
-      keyZen,
-      keyQuit,
+      captionContainer,
+      timeContainer,
+      pomodoriContainer,
+      separatorContainer,
+      optionsContainer,
     ),
   );
 
   return {
     root,
-    timeText,
-    pomodoriText,
+    captionContainer,
     captionText,
-    separator,
+    timeText,
+    pomodoriContainer,
+    pomodoriText,
+    separatorContainer,
+    optionsContainer,
     keyLifecycle,
     keyZen,
     keyQuit,
