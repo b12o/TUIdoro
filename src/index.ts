@@ -1,4 +1,4 @@
-import path, { sep } from "path";
+import path from "path";
 import os from "os";
 import fs from "fs";
 import { createCliRenderer, RGBA } from "@opentui/core";
@@ -50,8 +50,6 @@ const {
   separatorContainer,
   optionsContainer,
   keyLifecycle,
-  keyZen,
-  keyQuit,
 } = createLayout(renderer, {
   timeLeft: timer.timeLeftFormatted,
   pomodori: timer.lapsCompleted,
@@ -72,9 +70,6 @@ const mainLoop = setInterval(() => {
   timeText.color = RGBA.fromHex(timer.activeColor);
   captionText.content = timer.caption;
   pomodoriText.content = `Pomodori: ${timer.lapsCompleted}`;
-  keyZen.content = "z zen";
-  keyQuit.content = "q quit";
-  // separator.content = "______________________________________";
   switch (timer.getState()) {
     case "IDLE":
       keyLifecycle.content = "space start";

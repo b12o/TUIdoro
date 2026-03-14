@@ -129,7 +129,5 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     separatorContainer,
     optionsContainer,
     keyLifecycle,
-    keyZen,
-    keyQuit,
   };
 }
