@@ -1,9 +1,9 @@
 import { createCliRenderer, RGBA } from "@opentui/core";
-import { logger } from "./logger.js";
-import type { TimerState } from "./types.js";
-import { Timer } from "./timer.js";
 import { createLayout } from "./layout.js";
-import { playSound, loadConfig } from "./utils.js";
+import { logger } from "./logger.js";
+import { Timer } from "./timer.js";
+import type { TimerState } from "./types.js";
+import { loadConfig, playSound } from "./utils.js";
 
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
 import toggleSound from "../assets/tuidoro_toggle.mp3" with { type: "file" };

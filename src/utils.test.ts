@@ -1,9 +1,9 @@
-import { expect, test, describe } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import {
   getSeconds,
-  validateWorkInterval,
   validateBreakInterval,
   validateHex,
+  validateWorkInterval,
 } from "./utils.js";
 
 describe("convert to seconds", () => {

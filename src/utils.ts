@@ -1,7 +1,7 @@
+import { file } from "bun";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { file } from "bun";
 import type { PomodoroSettings } from "./types.js";
 
 const APP_NAME = process.env.APP_NAME ?? "tuidoro";

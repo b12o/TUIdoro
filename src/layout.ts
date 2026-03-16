@@ -1,10 +1,10 @@
 import {
   type CliRenderer,
   ASCIIFontRenderable,
-  TextRenderable,
-  BoxRenderable,
   Box,
+  BoxRenderable,
   RGBA,
+  TextRenderable,
 } from "@opentui/core";
 
 import { type InitialData } from "./types.js";

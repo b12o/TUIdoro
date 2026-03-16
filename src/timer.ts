@@ -1,12 +1,12 @@
-import type { PomodoroSettings, TimerState } from "./types.js";
 import { logger } from "./logger.js";
+import type { PomodoroSettings, TimerState } from "./types.js";
 import {
   countdownString,
-  playSound,
   getSeconds,
-  validateWorkInterval,
+  playSound,
   validateBreakInterval,
   validateHex,
+  validateWorkInterval,
 } from "./utils.js";
 
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
