@@ -1,6 +1,8 @@
+import fs from "fs";
 import os from "os";
 import path from "path";
 import { file } from "bun";
+import type { PomodoroSettings } from "./types.js";
 
 const APP_NAME = process.env.APP_NAME ?? "tuidoro";
 
@@ -36,4 +38,21 @@ export function validateBreakInterval(interval: number): boolean {
 export function validateHex(hex: string) {
   // Validates: # followed by 3 or 6 hex characters
   return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
+}
+
+export function loadConfig(): PomodoroSettings {
+  const configPath = path.join(
+    os.homedir(),
+    ".config",
+    APP_NAME,
+    "settings.json",
+  );
+  try {
+    const rawInput = fs.readFileSync(configPath, "utf8");
+    const settingsData: PomodoroSettings = JSON.parse(rawInput);
+    return settingsData;
+  } catch {
+    console.log("Please fix your settings file first.");
+    process.exit(1);
+  }
 }

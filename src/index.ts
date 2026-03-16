@@ -1,36 +1,15 @@
-import path from "path";
-import os from "os";
-import fs from "fs";
 import { createCliRenderer, RGBA } from "@opentui/core";
 import { logger } from "./logger.js";
-import type { PomodoroSettings, TimerState } from "./types.js";
+import type { TimerState } from "./types.js";
 import { Timer } from "./timer.js";
 import { createLayout } from "./layout.js";
 import { playSound } from "./utils.js";
+import { loadConfig } from "./utils.js";
 
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
 import toggleSound from "../assets/tuidoro_toggle.mp3" with { type: "file" };
 
-const APP_NAME = process.env.APP_NAME ?? "tuidoro";
-
-export function loadConfig(path: string): PomodoroSettings {
-  try {
-    const rawInput = fs.readFileSync(path, "utf8");
-    const settingsData: PomodoroSettings = JSON.parse(rawInput);
-    return settingsData;
-  } catch {
-    console.log("Please fix your settings file first.");
-    process.exit(1);
-  }
-}
-
-const configPath = path.join(
-  os.homedir(),
-  ".config",
-  APP_NAME,
-  "settings.json",
-);
-const config = loadConfig(configPath);
+const config = loadConfig();
 const timer = new Timer(config);
 
 const renderer = await createCliRenderer({
@@ -90,7 +69,7 @@ const transition: Record<TimerState, () => void> = {
 };
 
 timeContainer.onMouseUp = () => {
-  playSound(toggleSound);
+  config.sound && playSound(toggleSound);
   transition[timer.getState()]();
 };
 
@@ -104,7 +83,7 @@ renderer.keyInput.on("keypress", (key) => {
       break;
     case "space": {
       // use block scope to prevent const hoisting shenanigans
-      playSound(toggleSound);
+      config.sound && playSound(toggleSound);
       transition[timer.getState()]();
       break;
     }
