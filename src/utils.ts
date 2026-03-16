@@ -1,7 +1,8 @@
 import os from "os";
 import path from "path";
-import { APP_NAME } from "./index.js";
 import { file } from "bun";
+
+const APP_NAME = process.env.APP_NAME ?? "tuidoro";
 
 export function countdownString(seconds: number): string {
   const minutes = Math.floor(seconds / 60);

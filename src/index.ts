@@ -11,7 +11,7 @@ import { playSound } from "./utils.js";
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
 import toggleSound from "../assets/tuidoro_toggle.mp3" with { type: "file" };
 
-export const APP_NAME = "tuidoro";
+const APP_NAME = process.env.APP_NAME ?? "tuidoro";
 
 export function loadConfig(path: string): PomodoroSettings {
   try {
