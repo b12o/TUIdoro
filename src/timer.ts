@@ -8,12 +8,10 @@ import {
   validateBreakInterval,
   validateHex,
 } from "./utils.js";
-import { loadConfig } from "./utils.js";
 
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
 import chime from "../assets/tuidoro_chime.mp3" with { type: "file" };
 
-const config = loadConfig();
 const OFF_WHITE = "#ccc";
 
 export class Timer {
@@ -32,6 +30,7 @@ export class Timer {
   lapsCompleted = 0;
   pauseAfterLap = true;
   currentTimeLeft = this.workDurationSeconds;
+  enableSound = true;
 
   // UI
   caption = "Lock in.";
@@ -90,6 +89,8 @@ export class Timer {
 
     if (validateHex(settingsData.longBreakColor))
       this.longBreakColor = settingsData.longBreakColor;
+
+    this.enableSound = settingsData.sound;
   }
 
   getState(): TimerState {
@@ -128,7 +129,7 @@ export class Timer {
   handleNextPeriod() {
     this.stop();
     this.isStarted = false;
-    config.sound && playSound(chime);
+    this.enableSound && playSound(chime);
     if (this.isWork) {
       this.lapsCompleted++;
       this.isWork = false;
