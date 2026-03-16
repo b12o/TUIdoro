@@ -52,7 +52,7 @@ export function loadConfig(): PomodoroSettings {
     const settingsData: PomodoroSettings = JSON.parse(rawInput);
     return settingsData;
   } catch {
-    console.log("Please fix your settings file first.");
+    console.error("Please fix your settings file first.");
     process.exit(1);
   }
 }
