@@ -152,5 +152,6 @@ export class Timer {
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       this.caption = this.workCaption;
     }
+    Bun.spawn(["notify-send", this.caption]);
   }
 }
