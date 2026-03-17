@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import { createCliRenderer, RGBA } from "@opentui/core";
 import { createLayout } from "./layout.js";
 import { logger } from "./logger.js";
