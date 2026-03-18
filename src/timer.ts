@@ -130,6 +130,7 @@ export class Timer {
     this.stop();
     this.isStarted = false;
     this.enableSound && playSound(chime);
+    let notifyMessage = "";
     if (this.isWork) {
       this.lapsCompleted++;
       this.isWork = false;
@@ -144,6 +145,7 @@ export class Timer {
         this.caption = this.shortBreakCaption;
       }
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
+      notifyMessage = this.caption;
     } else if (this.isBreak) {
       this.isBreak = false;
       this.isWork = true;
@@ -151,7 +153,8 @@ export class Timer {
       this.currentTimeLeft = this.workDurationSeconds;
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       this.caption = this.workCaption;
+      notifyMessage = "Let's get back to work.";
     }
-    Bun.spawn(["notify-send", this.caption]);
+    notifyMessage.length > 0 && Bun.spawn(["notify-send", notifyMessage]);
   }
 }
