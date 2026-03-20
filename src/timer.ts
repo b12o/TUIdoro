@@ -153,7 +153,6 @@ export class Timer {
       this.currentTimeLeft = this.workDurationSeconds;
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       this.caption = this.workCaption;
-      // send notification message
       notifyMessage = "Let's get back to work.";
     }
     notifyMessage.length > 0 && Bun.spawn(["notify-send", notifyMessage]);
