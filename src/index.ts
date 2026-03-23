@@ -43,7 +43,7 @@ timeText.color = RGBA.fromHex(timer.activeColor);
 showHideElements();
 
 // 250ms in order to respond fairly quickly to timer.ts updates without
-// unnecessarily re-rendering UI.
+// unnecessarily re-rendering UI
 const RENDER_INTERVAL = 250;
 const mainLoop = setInterval(() => {
   timeText.text = timer.timeLeftFormatted;
