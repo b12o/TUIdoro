@@ -19,7 +19,8 @@ export class Timer {
   isStarted = false; // is 'false' at the beginning and after every pomodoro
   isRunning = false;
   isWork = false;
-  isBreak = false;
+  isShortBreak = false;
+  isLongBreak = false;
   intervalId: NodeJS.Timeout | undefined;
 
   // pomodoro settings
@@ -106,7 +107,7 @@ export class Timer {
   }
 
   stop(): void {
-    logger.info("Stopping ...");
+    logger.info("");
     this.isRunning = false;
     clearInterval(this.intervalId);
   }
@@ -116,6 +117,18 @@ export class Timer {
     this.isRunning = true;
     clearInterval(this.intervalId);
     this.intervalId = setInterval(() => this.countdown(), 1000);
+  }
+
+  reset() {
+    this.stop();
+    this.isStarted = false;
+    const resetDurationSeconds = this.isWork
+      ? this.workDurationSeconds
+      : this.isShortBreak
+        ? this.shortBreakDurationSeconds
+        : this.longBreakDurationSeconds;
+    this.currentTimeLeft = resetDurationSeconds;
+    this.timeLeftFormatted = countdownString(this.currentTimeLeft);
   }
 
   private countdown() {
@@ -134,20 +147,22 @@ export class Timer {
     if (this.isWork) {
       this.lapsCompleted++;
       this.isWork = false;
-      this.isBreak = true;
       if (this.lapsCompleted % this.longBreakAfter === 0) {
+        this.isLongBreak = true;
         this.activeColor = this.longBreakColor;
         this.currentTimeLeft = this.longBreakDurationSeconds;
         this.caption = this.longBreakCaption;
       } else {
+        this.isShortBreak = true;
         this.activeColor = this.shortBreakColor;
         this.currentTimeLeft = this.shortBreakDurationSeconds;
         this.caption = this.shortBreakCaption;
       }
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       notifyMessage = this.caption;
-    } else if (this.isBreak) {
-      this.isBreak = false;
+    } else if (this.isLongBreak || this.isShortBreak) {
+      this.isLongBreak = false;
+      this.isShortBreak = false;
       this.isWork = true;
       this.activeColor = this.workColor;
       this.currentTimeLeft = this.workDurationSeconds;

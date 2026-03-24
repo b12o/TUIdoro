@@ -75,18 +75,22 @@ timeContainer.onMouseUp = () => {
 
 renderer.keyInput.on("keypress", (key) => {
   switch (key.name) {
-    case "q":
-      renderer.destroy();
-      break;
-    case "z":
-      toggleZenMode();
-      break;
     case "space": {
       // use block scope to prevent const hoisting shenanigans
       config.sound && playSound(toggleSound);
       transition[timer.getState()]();
       break;
     }
+    case "r":
+      config.sound && playSound(toggleSound);
+      timer.reset();
+      break;
+    case "z":
+      toggleZenMode();
+      break;
+    case "q":
+      renderer.destroy();
+      break;
   }
 });
 
