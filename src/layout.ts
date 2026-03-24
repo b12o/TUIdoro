@@ -54,6 +54,12 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     fg: RGBA.fromHex(offWhite),
   });
 
+  const keyReset = new TextRenderable(renderer, {
+    id: "keyReset",
+    content: "r reset",
+    fg: RGBA.fromHex(offWhite),
+  });
+
   const keyQuit = new TextRenderable(renderer, {
     id: "keyQuit",
     content: "q quit",
@@ -97,6 +103,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     width: 42,
   });
   optionsContainer.add(keyLifecycle);
+  optionsContainer.add(keyReset);
   optionsContainer.add(keyZen);
   optionsContainer.add(keyQuit);
 
