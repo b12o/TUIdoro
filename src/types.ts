@@ -8,6 +8,8 @@ export type PomodoroSettings = {
   longBreakColor: string;
   zenMode: boolean;
   sound: boolean;
+  autoStartBreak: boolean;
+  autoStartWork: boolean;
 };
 
 export type InitialData = {

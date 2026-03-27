@@ -32,6 +32,8 @@ export class Timer {
   pauseAfterLap = true;
   currentTimeLeft = this.workDurationSeconds;
   enableSound = true;
+  autoStartBreak = false;
+  autoStartWork = false;
 
   // UI
   caption = "Lock in.";
@@ -92,6 +94,8 @@ export class Timer {
       this.longBreakColor = settingsData.longBreakColor;
 
     this.enableSound = settingsData.sound;
+    this.autoStartBreak = settingsData.autoStartBreak;
+    this.autoStartWork = settingsData.autoStartWork;
   }
 
   getState(): TimerState {
@@ -159,6 +163,7 @@ export class Timer {
         this.caption = this.shortBreakCaption;
       }
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
+      if (this.autoStartBreak) this.start();
       notifyMessage = this.caption;
     } else if (this.isLongBreak || this.isShortBreak) {
       this.isLongBreak = false;
@@ -167,6 +172,7 @@ export class Timer {
       this.activeColor = this.workColor;
       this.currentTimeLeft = this.workDurationSeconds;
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
+      if (this.autoStartWork) this.start();
       this.caption = this.workCaption;
       notifyMessage = "Let's get back to work.";
     }
