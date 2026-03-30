@@ -13,6 +13,7 @@ import {
 import chime from "../assets/tuidoro_chime.mp3" with { type: "file" };
 
 const OFF_WHITE = "#ccc";
+const WORK_CAPTION = "Let's get to work.";
 
 export class Timer {
   // state
@@ -36,8 +37,7 @@ export class Timer {
   autoStartWork = false;
 
   // UI
-  caption = "Lock in.";
-  workCaption = "Lock in.";
+  caption = WORK_CAPTION;
   shortBreakCaption = "Time for a short break.";
   longBreakCaption = "Time for a long break.";
   timeLeftFormatted = "";
@@ -164,7 +164,6 @@ export class Timer {
       }
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       if (this.autoStartBreak) this.start();
-      notifyMessage = this.caption;
     } else if (this.isLongBreak || this.isShortBreak) {
       this.isLongBreak = false;
       this.isShortBreak = false;
@@ -173,9 +172,9 @@ export class Timer {
       this.currentTimeLeft = this.workDurationSeconds;
       this.timeLeftFormatted = countdownString(this.currentTimeLeft);
       if (this.autoStartWork) this.start();
-      this.caption = this.workCaption;
-      notifyMessage = "Let's get back to work.";
+      this.caption = WORK_CAPTION;
     }
+    notifyMessage = this.caption;
     notifyMessage.length > 0 && Bun.spawn(["notify-send", notifyMessage]);
   }
 }
