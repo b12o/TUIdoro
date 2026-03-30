@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "name": "tuidoro",
   "description": "A sleek pomodoro timer that runs in your terminal.",
   "author": "b12o",
@@ -18,7 +19,6 @@
   "engines": {
     "bun": ">=1.3.0"
   },
-  "version": "0.0.2",
   "module": "src/index.ts",
   "type": "module",
   "bin": {
