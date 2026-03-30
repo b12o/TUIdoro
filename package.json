@@ -1,14 +1,33 @@
 {
   "name": "tuidoro",
+  "description": "A sleek pomodoro timer that runs in your terminal.",
+  "author": "b12o",
+  "keywords": [
+    "pomodoro",
+    "tui",
+    "terminal",
+    "timer"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b12o/tuidoro.git"
+  },
+  "os": [
+    "linux"
+  ],
+  "engines": {
+    "bun": ">=1.0.0"
+  },
   "version": "0.0.1",
-  "module": "src/index.tsx",
+  "module": "src/index.ts",
   "type": "module",
   "bin": {
     "tuidoro": "./src/index.ts"
   },
   "files": [
     "src",
-    "assets"
+    "assets",
+    "config"
   ],
   "scripts": {
     "dev": "bun run src/index.ts",
