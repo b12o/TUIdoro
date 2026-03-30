@@ -22,7 +22,7 @@
   "module": "src/index.ts",
   "type": "module",
   "bin": {
-    "tuidoro": "./src/index.ts"
+    "tuidoro": "src/index.ts"
   },
   "files": [
     "src",
