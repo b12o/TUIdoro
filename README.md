@@ -6,7 +6,7 @@ TUIdoro is a sleek pomodoro timer that runs in your terminal.
 
 ## Installation
 
-### Via npx / bunx (requires bun > 1.0.0)
+### Via npx / bunx (requires bun > 1.3.0)
 
 ```bash
 npx tuidoro (requires 'bun' to be in PATH)
@@ -19,7 +19,7 @@ bunx tuidoro
 yay -S aur/tuidoro
 ```
 
-### Run locally (requires bun > 1.0.0)
+### Run locally (requires bun > 1.3.0)
 
 ```bash
 bun install
