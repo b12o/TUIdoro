@@ -2,6 +2,8 @@
 
 TUIdoro is a simple yet stylish pomodoro timer that runs in your terminal.
 
+![screenshot](./assets/screenshot1.png)
+
 ## Installation
 
 ### Via npx / bunx (requires bun > 1.3.x)
