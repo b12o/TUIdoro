@@ -23,11 +23,6 @@ yay -S aur/tuidoro
 
 ```bash
 bun install
-```
-
-To run:
-
-```bash
 bun run build
 ./dist/tuidoro
 ```
@@ -37,8 +32,9 @@ bun run build
 The priority for reading the configuration is as follows:
 
 1. `$TUIDORO_SETTINGS_PATH` environment variable
-2. `XDG_CONFIG` (~/.config/tuidoro/settings.json)
-   If the configuration file does not exist TUIdoro will launch with its [defaults](./config/settings.json).
+2. `~/.config/tuidoro/settings.json`
+
+If the configuration file does not exist TUIdoro will launch with its [defaults](./config/settings.json).
 
 ## Contributing
 
