@@ -7,6 +7,7 @@ import {
   validateBreakInterval,
   validateHex,
   validateWorkInterval,
+  getConfigPath,
 } from "./utils.js";
 
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
@@ -56,6 +57,8 @@ export class Timer {
     this.isWork = true;
 
     logger.debug("\n\n=================================\n");
+    logger.debug(`config path: ${getConfigPath()}`);
+
     logger.debug("Initialized timer with following settings:");
     logger.debug(`workduration (seconds): ${this.workDurationSeconds}`);
     logger.debug(
