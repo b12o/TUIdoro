@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "name": "tuidoro",
-  "description": "A sleek pomodoro timer that runs in your terminal.",
+  "description": "A minimal pomodoro timer that runs in your terminal.",
   "author": "b12o",
   "keywords": [
     "pomodoro",

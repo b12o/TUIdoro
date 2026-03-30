@@ -1,6 +1,6 @@
 # TUIdoro
 
-TUIdoro is a sleek pomodoro timer that runs in your terminal.
+TUIdoro is a minimal pomodoro timer that runs in your terminal.
 
 ![screenshot](./assets/screenshot1.png)
 
