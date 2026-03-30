@@ -1,4 +1,6 @@
 import { appendFileSync } from "fs";
+import os from "os";
+import path from "path";
 
 const levels = {
   debug: 0,
@@ -8,11 +10,11 @@ const levels = {
 };
 
 type Level = keyof typeof levels;
-const currentLevel: Level = (process.env.LOG_LEVEL as Level) || "info";
+const currentLevel: Level = (process.env.TUIDORO_LOG_LEVEL as Level) || "info";
 
 function logToFile(msg: string) {
-  // tuidoro is located in project root.
-  appendFileSync("tuidoro.log", `${msg}\n`);
+  const logPath = path.join(os.tmpdir(), "tuidoro.log");
+  appendFileSync(logPath, `${msg}\n`);
 }
 
 export const logger = {
