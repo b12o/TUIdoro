@@ -4,13 +4,19 @@ import { createCliRenderer, RGBA } from "@opentui/core";
 import { createLayout } from "./layout.js";
 import { logger } from "./logger.js";
 import { Timer } from "./timer.js";
-import type { TimerState } from "./types.js";
-import { loadConfig, playSound } from "./utils.js";
+import type { PomodoroSettings, TimerState } from "./types.js";
+import { loadConfig, loadDefaultConfig, playSound } from "./utils.js";
 
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
 import toggleSound from "../assets/tuidoro_toggle.mp3" with { type: "file" };
 
-const config = loadConfig();
+let config: PomodoroSettings;
+try {
+  config = loadConfig();
+} catch {
+  config = loadDefaultConfig();
+}
+
 const timer = new Timer(config);
 
 const renderer = await createCliRenderer({

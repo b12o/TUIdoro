@@ -1,10 +1,11 @@
 import { file } from "bun";
-import fs from "fs";
+import { existsSync, readFileSync } from "fs";
 import os from "os";
 import path from "path";
 import type { PomodoroSettings } from "./types.js";
+import defaultSettings from "../config/settings.json";
 
-const APP_NAME = process.env.APP_NAME ?? "tuidoro";
+const APP_NAME = "tuidoro";
 
 export function countdownString(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
@@ -40,19 +41,25 @@ export function validateHex(hex: string) {
   return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
 }
 
-export function loadConfig(): PomodoroSettings {
-  const configPath = path.join(
+export function getConfigPath() {
+  let configPath = path.join(
     os.homedir(),
     ".config",
     APP_NAME,
     "settings.json",
   );
-  try {
-    const rawInput = fs.readFileSync(configPath, "utf8");
-    const settingsData: PomodoroSettings = JSON.parse(rawInput);
-    return settingsData;
-  } catch {
-    console.error("Please fix your settings file first.");
-    process.exit(1);
+  const envPath = process.env.TUIDORO_SETTINGS_PATH;
+  if (envPath && existsSync(envPath)) {
+    configPath = envPath;
   }
+  return configPath;
+}
+
+export function loadConfig(): PomodoroSettings {
+  const rawInput = readFileSync(getConfigPath(), "utf8");
+  return JSON.parse(rawInput);
+}
+
+export function loadDefaultConfig(): PomodoroSettings {
+  return defaultSettings;
 }
