@@ -41,25 +41,20 @@ export function validateHex(hex: string) {
   return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
 }
 
-export function getConfigPath() {
-  let configPath = path.join(
+export async function loadConfig(): Promise<PomodoroSettings> {
+  const configPath = path.join(
     os.homedir(),
     ".config",
     APP_NAME,
     "settings.json",
   );
-  const envPath = process.env.TUIDORO_SETTINGS_PATH;
-  if (envPath && existsSync(envPath)) {
-    configPath = envPath;
+  try {
+    const rawInput = readFileSync(configPath, "utf8");
+    return JSON.parse(rawInput);
+  } catch {
+    if (!existsSync(configPath)) {
+      await Bun.write(configPath, JSON.stringify(defaultSettings, null, 2));
+    }
+    return defaultSettings;
   }
-  return configPath;
-}
-
-export function loadConfig(): PomodoroSettings {
-  const rawInput = readFileSync(getConfigPath(), "utf8");
-  return JSON.parse(rawInput);
-}
-
-export function loadDefaultConfig(): PomodoroSettings {
-  return defaultSettings;
 }

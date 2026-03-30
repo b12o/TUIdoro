@@ -29,12 +29,9 @@ bun run build
 
 ## Configuration
 
-The priority for reading the configuration is as follows:
+The configuration file will be created on initial startup:
 
-1. `$TUIDORO_SETTINGS_PATH` environment variable
-2. `~/.config/tuidoro/settings.json`
-
-If the configuration file does not exist TUIdoro will launch with its [defaults](./config/settings.json).
+`~/.config/tuidoro/settings.json`
 
 ## Contributing
 
