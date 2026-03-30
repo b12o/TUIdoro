@@ -1,15 +1,15 @@
 # TUIdoro
 
-TUIdoro is a simple yet stylish pomodoro timer that runs in your terminal.
+TUIdoro is a sleek pomodoro timer that runs in your terminal.
 
 ![screenshot](./assets/screenshot1.png)
 
 ## Installation
 
-### Via npx / bunx (requires bun > 1.3.x)
+### Via npx / bunx (requires bun > 1.0.0)
 
 ```bash
-npx tuidoro
+npx tuidoro (requires 'bun' to be in PATH)
 bunx tuidoro
 ```
 
@@ -19,7 +19,7 @@ bunx tuidoro
 yay -S aur/tuidoro
 ```
 
-### Run locally (requires bun > 1.3.x)
+### Run locally (requires bun > 1.0.0)
 
 ```bash
 bun install
