@@ -6,7 +6,7 @@
   "workColor": "#cccccc",
   "shortBreakColor": "#a7f3d0",
   "longBreakColor": "#a78bfa",
-  "zenMode": true,
+  "zenMode": false,
   "sound": true,
   "autoStartBreak": false,
   "autoStartWork": false
