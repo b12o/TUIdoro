@@ -37,6 +37,15 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     fg: RGBA.fromHex(offWhite),
   });
 
+  const audioAvailableText = new TextRenderable(renderer, {
+    id: "audioAvailable",
+    content:
+      "Can't play audio ('paplay' not installed).\
+Disable 'sound' in your config or install paplay to remove this notice.",
+    justifyContent: "center",
+    fg: RGBA.fromHex(offWhite),
+  });
+
   const separator = new TextRenderable(renderer, {
     content: "_________________________________________",
     fg: RGBA.fromHex(gray),
@@ -65,6 +74,12 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
     content: "q quit",
     fg: RGBA.fromHex(offWhite),
   });
+
+  const audioAvailableContainer = new BoxRenderable(renderer, {
+    id: "audioAvailableContainer",
+    border: true,
+  });
+  audioAvailableContainer.add(audioAvailableText);
 
   const captionContainer = new BoxRenderable(renderer, {
     id: "captionContainer",
@@ -119,6 +134,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
         alignItems: "center",
         justifyContent: "center",
       },
+      audioAvailableContainer,
       captionContainer,
       timeContainer,
       pomodoriContainer,
@@ -129,6 +145,7 @@ export function createLayout(renderer: CliRenderer, initialData: InitialData) {
 
   return {
     root,
+    audioAvailableContainer,
     captionContainer,
     captionText,
     timeContainer,

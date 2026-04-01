@@ -5,7 +5,7 @@ import { createLayout } from "./layout.js";
 import { logger } from "./logger.js";
 import { Timer } from "./timer.js";
 import type { TimerState } from "./types.js";
-import { loadConfig, playSound } from "./utils.js";
+import { loadConfig, playSound, isAudioAvailable } from "./utils.js";
 
 //@ts-ignore -- this is a bun-specific file embed import that ts is not aware of
 import toggleSound from "../assets/tuidoro_toggle.mp3" with { type: "file" };
@@ -23,6 +23,7 @@ let zenModeEnabled = config.zenMode ?? false;
 
 const {
   root,
+  audioAvailableContainer,
   captionContainer,
   captionText,
   timeContainer,
@@ -43,6 +44,7 @@ renderer.root.add(root);
 // initial render
 timeText.color = RGBA.fromHex(timer.activeColor);
 showHideElements();
+audioAvailableContainer.visible = config.sound && !isAudioAvailable();
 
 // 250ms in order to respond fairly quickly to timer.ts updates without
 // unnecessarily re-rendering UI

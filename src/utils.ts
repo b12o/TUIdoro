@@ -58,3 +58,7 @@ export async function loadConfig(): Promise<PomodoroSettings> {
     return defaultSettings;
   }
 }
+
+export function isAudioAvailable() {
+  return Bun.which("paplay") !== null;
+}

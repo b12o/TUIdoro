@@ -176,6 +176,7 @@ export class Timer {
       this.caption = WORK_CAPTION;
     }
     notifyMessage = this.caption;
-    notifyMessage.length > 0 && Bun.spawn(["notify-send", notifyMessage]);
+    if (notifyMessage.length)
+      Bun.spawn(["notify-send", notifyMessage], { stderr: "ignore" });
   }
 }
