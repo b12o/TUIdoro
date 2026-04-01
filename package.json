@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "tuidoro",
   "description": "A minimal pomodoro timer that runs in your terminal.",
   "author": "b12o",
